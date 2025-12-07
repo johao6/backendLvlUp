@@ -68,10 +68,19 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        //PARA VERIFICAR ELIMINAR POSTERIORMENTE
+        System.out.println("🟩 [Service] Intentando autenticar...");
+        System.out.println("🟩 [Service] Email: " + request.getEmail());
+        System.out.println("🟩 [Service] Password: " + request.getPassword());
+
         // Autenticación mediante AuthenticationManager
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
+
+        //PARA VERIFICAR ELIMINAR POSTERIORMENTE
+        System.out.println("🟩 [Service] Autenticación exitosa para: " + request.getEmail());
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Obtener UserDetails y generar token con roles
@@ -89,7 +98,5 @@ public class AuthService {
 
         return new AuthResponse(token, usuario.getId(), usuario.getNombre(), usuario.getEmail(), roles);
     }
-
-
 
 }

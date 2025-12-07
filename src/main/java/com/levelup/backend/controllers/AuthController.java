@@ -31,6 +31,10 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Iniciar sesión")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        //VERIFICAR QUE RECIBE EL BACKEND
+        System.out.println("🟦 [Controller] Email recibido: " + request.getEmail());
+        System.out.println("🟦 [Controller] Password recibido: " + request.getPassword());
+
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }

@@ -124,7 +124,7 @@ public class LoadDatabase {
             Usuario usuario = new Usuario();
             usuario.setNombre(faker.name().fullName());
             usuario.setEmail(faker.internet().emailAddress());
-            usuario.setPassword("password123");
+            usuario.setPassword(passwordEncoder.encode("password123"));//<-- Contraseña por defecto Encriptada
             usuario.setTelefono(faker.phoneNumber().cellPhone());
             usuario.setDireccion(faker.address().fullAddress());
             Set<String> roles = new HashSet<>();
