@@ -1,4 +1,5 @@
 package com.levelup.backend.controllers;
+import com.levelup.backend.dto.CarritoItemDto;
 import com.levelup.backend.dto.ProductoDto;
 import com.levelup.backend.services.CarritoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +16,7 @@ public class CarritoController {
     private final CarritoService carritoService;
     @GetMapping("/api/carrito/{usuarioId}")
     @Operation(summary = "Obtener carrito del usuario")
-    public ResponseEntity<List<ProductoDto>> obtenerCarrito(@PathVariable Long usuarioId) {
+    public ResponseEntity<List<CarritoItemDto>> obtenerCarrito(@PathVariable Long usuarioId) {//CAMBIAR A PRODUCTODTO
         return ResponseEntity.ok(carritoService.obtenerCarrito(usuarioId));
     }
     @PostMapping("/api/carrito/{usuarioId}/{productoId}")

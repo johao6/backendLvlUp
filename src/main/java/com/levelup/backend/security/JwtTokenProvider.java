@@ -31,7 +31,28 @@ public class JwtTokenProvider {
     // ========================
     // 🔥 Generar token con roles
     // ========================
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, Usuario usuario) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", usuario.getId());
+        claims.put("nombre", usuario.getNombre());
+        claims.put("email", usuario.getEmail());
+        claims.put("roles", userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
+
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+
+        return Jwts.builder()
+                .subject(String.valueOf(usuario.getId())) // ✅ Cambiar a ID
+                .claims(claims)
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(getSigningKey())
+                .compact();
+    }
+    /*public String generateToken(UserDetails userDetails) {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", userDetails.getAuthorities()
@@ -49,11 +70,21 @@ public class JwtTokenProvider {
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
                 .compact();
+    }*/
+
+    //ESTO ES LO NUEVO DE ID
+    // ========================
+    // Obtener ID del token (actualizado)
+    // ========================
+    public String getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.getSubject(); // Ahora devuelve el ID
     }
-
-
-
-
 
     // ========================
     // Obtener email del token
@@ -65,7 +96,7 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        return claims.getSubject();
+        return claims.get("email", String.class);
     }
 
     // ========================

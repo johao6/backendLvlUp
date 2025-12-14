@@ -1,5 +1,6 @@
 package com.levelup.backend.services;
 
+import com.levelup.backend.dto.CarritoItemDto;
 import com.levelup.backend.dto.ProductoDto;
 import com.levelup.backend.exceptions.BadRequestException;
 import com.levelup.backend.models.ItemCarrito;
@@ -23,12 +24,22 @@ public class CarritoService {
     private final UsuarioRepository usuarioRepository;
     private final ProductoRepository productoRepository;
 
-    public List<ProductoDto> obtenerCarrito(Long usuarioId) {
+    public List<CarritoItemDto> obtenerCarrito(Long usuarioId) {
         List<ItemCarrito> items = itemCarritoRepository.findByUsuarioId(usuarioId);
 
         return items.stream()
-                .map(this::convertirAProductoDto)
+                .map(item -> {
+                    CarritoItemDto dto = new CarritoItemDto();
+                    dto.setProducto(convertirAProductoDto(item));
+                    dto.setCantidad(item.getCantidad());
+                    return dto;
+                })
                 .collect(Collectors.toList());
+
+        //CODIGOO ORIGINAL ABAJO
+        /*return items.stream()
+                .map(this::convertirAProductoDto)
+                .collect(Collectors.toList());*/
     }
 
     @Transactional
@@ -133,7 +144,7 @@ public class CarritoService {
         dto.setMarca(p.getMarca());
         dto.setCategoria(p.getCategoria() != null ? p.getCategoria().getNombre() : null);
         dto.setDestacado(p.getDestacado());
-        dto.setCantidadEnCarrito(item.getCantidad());
+        //LINEA MODIFICADA DEL DTO ->dto.setCantidadEnCarrito(item.getCantidad());
         return dto;
     }
 }
