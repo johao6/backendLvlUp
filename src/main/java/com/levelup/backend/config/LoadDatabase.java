@@ -208,7 +208,7 @@ public class LoadDatabase {
             producto.setPrecio(new BigDecimal(faker.number().randomDouble(2, 19, 999)));
             producto.setPrecioAnterior(producto.getPrecio().multiply(BigDecimal.valueOf(1.15)));
             producto.setStock(faker.number().numberBetween(5, 150));
-            producto.setImagen("/images/productos/default.jpg");
+            producto.setImagen("/images/productos/Logo-Level-UP.png");
             producto.setMarca(faker.company().name());
             producto.setSku("SKU-" + faker.number().digits(8));
             producto.setDestacado(Math.random() > 0.8);
