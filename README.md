@@ -28,6 +28,8 @@ API REST para e-commerce de productos gamer desarrollada con Spring Boot.
 - `DELETE /api/productos/{id}` - Eliminar producto
 - `GET /api/carrito/{usuarioId}` - Ver carrito
 - `POST /api/carrito/{usuarioId}/{productoId}` - Agregar al carrito
+- `GET /api/usuarios` - Lista de usuarios (admin)
+- `DELETE /api/usuario/{email}` - Eliminar usuario (admin)
 
 ## 🛠️ Desarrollo Local
 
