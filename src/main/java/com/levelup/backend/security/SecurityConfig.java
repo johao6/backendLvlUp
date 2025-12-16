@@ -53,10 +53,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                //ORIGINAL -> .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf
+                        // H2 necesita que se desactive CSRF solo para su ruta
+                        .ignoringRequestMatchers("/h2-console/**")
+                        .disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        //LO DE ABAJO SE DEBE BORRAR
+                        // H2 Console -> acceso público
+                        .requestMatchers("/h2-console/**").permitAll()
+
                         // Endpoints públicos
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
@@ -75,9 +83,16 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 );
 
+        //Evitar que JWT bloquee el H2 console
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+        //Necesario para que funcione el H2 console (frames)
+        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
+
+
+        //CODIGO ORIGINAL -> http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        //CODIGO ORIGINAL -> http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
 
         return http.build();
     }

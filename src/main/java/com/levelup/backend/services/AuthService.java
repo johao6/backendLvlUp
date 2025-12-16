@@ -62,25 +62,44 @@ public class AuthService {
                 roles.stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r)).collect(Collectors.toList())
         );
 
-        String token = jwtTokenProvider.generateToken(userDetails);
+
+        //Pasar el usuario completo
+        String token = jwtTokenProvider.generateToken(userDetails, usuario);
+        //CODIGO ORIGINAL ->String token = jwtTokenProvider.generateToken(userDetails);
 
         return new AuthResponse(token, usuario.getId(), usuario.getNombre(), usuario.getEmail(), new ArrayList<>(usuario.getRoles()));
     }
 
     public AuthResponse login(LoginRequest request) {
+        //PARA VERIFICAR ELIMINAR POSTERIORMENTE
+        System.out.println("🟩 [Service] Intentando autenticar...");
+        System.out.println("🟩 [Service] Email: " + request.getEmail());
+        System.out.println("🟩 [Service] Password: " + request.getPassword());
+
         // Autenticación mediante AuthenticationManager
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
+
+        //PARA VERIFICAR ELIMINAR POSTERIORMENTE
+        System.out.println("🟩 [Service] Autenticación exitosa para: " + request.getEmail());
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Obtener UserDetails y generar token con roles
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtTokenProvider.generateToken(userDetails);
+        //CODIGO ANTIGUO ->String token = jwtTokenProvider.generateToken(userDetails);
 
-        // Obtener usuario completo para devolver id/nombre/email (opcional)
+        //Obtener usuario completo
         Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadRequestException("Usuario no encontrado"));
+
+        //Pasar el usuario completo
+        String token = jwtTokenProvider.generateToken(userDetails, usuario);
+
+        /* CODIGO ANTIGUO -> Obtener usuario completo para devolver id/nombre/email (opcional)
+        Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException("Usuario no encontrado"));*/
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -89,7 +108,5 @@ public class AuthService {
 
         return new AuthResponse(token, usuario.getId(), usuario.getNombre(), usuario.getEmail(), roles);
     }
-
-
 
 }

@@ -20,6 +20,6 @@ public class ProductoDto {
     private String marca;
     private String categoria;
     private Boolean destacado;
-    private Integer cantidadEnCarrito;
+    //private Integer cantidadEnCarrito;
 }
 

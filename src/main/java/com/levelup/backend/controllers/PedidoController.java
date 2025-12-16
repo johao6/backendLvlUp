@@ -1,6 +1,7 @@
 package com.levelup.backend.controllers;
 
 import com.levelup.backend.dto.PedidoRequest;
+import com.levelup.backend.dto.PedidoResponse;
 import com.levelup.backend.models.Pedido;
 import com.levelup.backend.services.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,32 +25,32 @@ public class PedidoController {
     
     @GetMapping
     @Operation(summary = "Obtener todos los pedidos")
-    public ResponseEntity<List<Pedido>> getAllPedidos() {
+    public ResponseEntity<List<PedidoResponse>> getAllPedidos() {
         return ResponseEntity.ok(pedidoService.getAllPedidos());
     }
     
     @GetMapping("/{id}")
     @Operation(summary = "Obtener pedido por ID")
-    public ResponseEntity<Pedido> getPedidoById(@PathVariable Long id) {
+    public ResponseEntity<PedidoResponse> getPedidoById(@PathVariable Long id) {
         return ResponseEntity.ok(pedidoService.getPedidoById(id));
     }
     
     @GetMapping("/usuario/{usuarioId}")
     @Operation(summary = "Obtener pedidos de un usuario")
-    public ResponseEntity<List<Pedido>> getPedidosByUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<List<PedidoResponse>> getPedidosByUsuario(@PathVariable Long usuarioId) {
         return ResponseEntity.ok(pedidoService.getPedidosByUsuario(usuarioId));
     }
     
     @PostMapping
     @Operation(summary = "Crear nuevo pedido")
-    public ResponseEntity<Pedido> createPedido(@Valid @RequestBody PedidoRequest request) {
-        Pedido createdPedido = pedidoService.createPedido(request);
+    public ResponseEntity<PedidoResponse> createPedido(@Valid @RequestBody PedidoRequest request) {
+        PedidoResponse createdPedido = pedidoService.createPedido(request);
         return new ResponseEntity<>(createdPedido, HttpStatus.CREATED);
     }
     
     @PatchMapping("/{id}/estado")
     @Operation(summary = "Actualizar estado del pedido")
-    public ResponseEntity<Pedido> updateEstadoPedido(
+    public ResponseEntity<PedidoResponse> updateEstadoPedido(
             @PathVariable Long id,
             @RequestParam Pedido.EstadoPedido estado) {
         return ResponseEntity.ok(pedidoService.updateEstadoPedido(id, estado));
