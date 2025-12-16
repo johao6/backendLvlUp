@@ -16,7 +16,7 @@ public class CarritoController {
     private final CarritoService carritoService;
     @GetMapping("/api/carrito/{usuarioId}")
     @Operation(summary = "Obtener carrito del usuario")
-    public ResponseEntity<List<CarritoItemDto>> obtenerCarrito(@PathVariable Long usuarioId) {//CAMBIAR A PRODUCTODTO
+    public ResponseEntity<List<CarritoItemDto>> obtenerCarrito(@PathVariable Long usuarioId) {
         return ResponseEntity.ok(carritoService.obtenerCarrito(usuarioId));
     }
     @PostMapping("/api/carrito/{usuarioId}/{productoId}")
